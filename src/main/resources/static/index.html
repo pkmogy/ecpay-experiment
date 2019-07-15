@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<HTML>
+	<HEAD>
+		<LINK crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet" type="text/css"/>
+		<META charset="UTF-8"/>
+		<SCRIPT src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></SCRIPT>
+		<SCRIPT crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></SCRIPT>
+		<SCRIPT crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></SCRIPT>
+		<TITLE>index.html</TITLE>
+		<STYLE>
+			.margin-navbar {
+				margin-top:72px !important;
+			}
+			
+			.margin-top {
+				margin-top:8px !important;
+			}
+			
+			.margin-left-right {
+				margin-left: 8px !important;
+				margin-right: 8px !important;
+			}
+		</STYLE>
+	</HEAD>
+	<BODY class="margin-left-right">
+		<NAV class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+			<DIV class="container-fluid">
+				<DIV class="navbar-header">
+					<A class="navbar-brand" href="index.html">WebSiteName</A>
+				</DIV>
+				<DIV class="collapse navbar-collapse">
+					<UL class="nav navbar-nav mr-auto">
+						<LI class="nav-item dropdown">
+							<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">會員中心</A>
+							<DIV class="dropdown-menu">
+								<A  class="dropdown-item" href="people/index.html">會員列表</A >
+								<A  class="dropdown-item" href="#">會員新增</A >
+							</DIV>
+						</LI>
+						<LI class="nav-item dropdown">
+							<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">點數中心</A>
+							<DIV class="dropdown-menu">
+								<A  class="dropdown-item" href="treasury/index.html">點數明細</A >
+								<A  class="dropdown-item" href="treasury/type.html">點數類型</A >
+								<A  class="dropdown-item" href="#">點數類型新增</A >
+							</DIV>
+						</LI>
+						<LI class="nav-item dropdown">
+							<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">課程中心</A>
+							<DIV class="dropdown-menu">
+								<A  class="dropdown-item" href="course/index.html">課程列表</A >
+								<A  class="dropdown-item" href="#">課程新增</A >
+								<A  class="dropdown-item" href="course/category.html">課程分類</A >
+								<A  class="dropdown-item" href="#">課程分類新增</A >
+								<A  class="dropdown-item" href="../course/tag.html">課程標籤</A >
+								<A  class="dropdown-item" href="#">課程標籤新增</A >
+								<A  class="dropdown-item" href="../course/promotion.html">優惠活動</A >
+								<A  class="dropdown-item" href="#">優惠活動新增</A >
+							</DIV>
+						</LI>
+						<LI class="nav-item dropdown">
+							<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">商品中心</A>
+							<DIV class="dropdown-menu">
+								<A  class="dropdown-item" href="../merchandise/index.html">商品列表</A >
+								<A  class="dropdown-item" href="#">商品新增</A >
+								<A  class="dropdown-item" href="../merchandise/category.html">商品分類</A >
+								<A  class="dropdown-item" href="#">商品分類新增</A >
+								<A  class="dropdown-item" href="../merchandise/receipt.html">訂單列表</A >
+							</DIV>
+						</LI>
+						<LI class="nav-item dropdown">
+							<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">成就中心</A>
+							<DIV class="dropdown-menu">
+								<A  class="dropdown-item" href="../badge/index.html">徽章列表</A >
+								<A  class="dropdown-item" href="#">徽章新增</A >
+							</DIV>
+						</LI>
+						<LI class="nav-item dropdown">
+							<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">酷碰劵</A>
+							<DIV class="dropdown-menu">
+								<A  class="dropdown-item" href="../coupon/index.html">酷碰劵列表</A >
+								<A  class="dropdown-item" href="#">酷碰劵新增</A >
+							</DIV>
+						</LI>
+					</UL>
+				</DIV>
+				<UL class="nav navbar-nav navbar-right">
+					<LI class="nav-item dropdown">
+						<A class="nav-link " data-toggle="dropdown" href="#">
+							<img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHRVuZJLTcSNlbUrRzeDClu-cYG87524seitr7RUvAG7zevIDGeQ" alt="Logo" style="width:40px;height: 40px">
+						</A>
+						<DIV class="dropdown-menu dropdown-menu-right">
+							<A  class="dropdown-item" href="#">設定</A >
+							<A  class="dropdown-item" href="#">登出</A >
+						</DIV>
+					</LI>
+				</UL>
+			</DIV>
+		</NAV>
+		<DIV class="margin-navbar">
+			<H4 class="page-title font-weight-bold">分頁名稱</h4>
+			<DIV class="btn-group">
+				<OL class="breadcrumb p-0 m-0 bg-white">
+					<LI class="breadcrumb-item">首頁</LI>
+					<LI class="breadcrumb-item active">分頁名</LI>
+				</OL>
+			</DIV>
+			<FORM action="*">
+				<DIV class="form-group">
+					<LABEL for="admin">帳號:</LABEL>
+					<INPUT type="text" class="form-control" id="admin">
+				</DIV>
+				<DIV class="form-group">
+					<LABEL for="pwd">密碼:</LABEL>
+					<INPUT type="password" class="form-control" id="pwd">
+				</DIV>
+				<DIV class="form-group">
+					<LABEL for="email">Email:</LABEL>
+					<INPUT type="email" class="form-control" id="email">
+				</DIV>
+				<DIV class="form-group form-check">
+					<LABEL class="form-check-label">
+						<INPUT class="form-check-input" type="checkbox">記住我
+					</LABEL>
+				</DIV>
+				<BUTTON type="submit" class="btn btn-primary">確認</BUTTON>
+			</FORM>
+			<TABLE class="table margin-top">
+				<THEAD class="thead-dark">
+					<TR>
+						<TH>帳號</TH>
+						<TH>密碼</TH>
+						<TH>Email</TH>
+					</TR>
+				</THEAD>
+				<TBODY>
+					<TR>
+						<TD>admin</TD>
+						<TD>admin</TD>
+						<TD>admin@admin.com</TD>
+					</TR>
+					<TR>
+						<TD>menber</TD>
+						<TD>menber</TD>
+						<TD>menber@menber.com</TD>
+					</TR>
+				</TBODY>
+			</TABLE>
+		</DIV>
+	</BODY>
+</HTML>
