@@ -1,4 +1,4 @@
-package com.ilearnedlearned.panel;
+package com.ilearnedlearned.ecpay;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

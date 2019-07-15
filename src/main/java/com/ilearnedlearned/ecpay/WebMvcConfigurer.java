@@ -1,4 +1,4 @@
-package com.ilearnedlearned.panel;
+package com.ilearnedlearned.ecpay;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
