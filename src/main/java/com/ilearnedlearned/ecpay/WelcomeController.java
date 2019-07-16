@@ -1,6 +1,10 @@
 package com.ilearnedlearned.ecpay;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,16 +27,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/")
 public class WelcomeController {
+
 	/**
-	 * 
-	 * @return
-	 * @throws IOException 
+	 *
+	 * @return @throws IOException
 	 */
 	@GetMapping(path = "/", produces = "text/plain;charset=UTF-8")
 	@ResponseBody
-	String index() throws IOException {
+	String index() throws IOException, NoSuchAlgorithmException {
 		Map<String, String> map = new HashMap();
-		map.put("MerchantID", "");//廠商編號
+		map.put("MerchantID", "2000933");//廠商編號
 		map.put("MerchantTradeNo", getMerchantTradeNumber());//廠商交易編號
 		map.put("MerchantTradeDate", getMerchantTradeDate());//廠商交易時間
 		map.put("LogisticsType", "CVS");//物流類型
@@ -55,35 +59,28 @@ public class WelcomeController {
 		map.put("Remark", "");//備註
 		map.put("ReceiverStoreID", "991182");//ReceiverStoreID
 		map.put("ReturnStoreID", "991182");//退貨門市代號
-
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("HashKey=XBERn1YOvpM9nfZc").append("&");
-
-		List<String> keys = new ArrayList<>(map.keySet());
-		Collections.sort(keys);
-		Iterator<String> iterator = keys.iterator();
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-			//jsonObject.put(key, map.get(key));
-			//System.out.println(key + "=" + map.get(key));
-			stringBuilder.append(key).append("=").append(map.get(key)).append("&");
-		}
-		stringBuilder.append("HashKey=XBERn1YOvpM9nfZc");
-		
-//		map.put("CheckMacValue", "");//檢查碼
-//		CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-//		HttpGet httpGet = new HttpGet("https://logistics-stage.ecpay.com.tw/Express/Create");
-//		CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
-//		try {
-//
-//		} catch (Exception e) {
+		map.put("CheckMacValue", getCheckMacValue("XBERn1YOvpM9nfZc","h1ONHk4P4yqbl5LK",map));//檢查碼
+//		List<String> keys = new ArrayList<>(map.keySet());
+//		Collections.sort(keys);
+//		Iterator<String> iterator = keys.iterator();
+//		while (iterator.hasNext()) {
+//			String key = iterator.next();
+//			//jsonObject.put(key, map.get(key));
+//			//System.out.println(key + "=" + map.get(key));
 //		}
-		return stringBuilder.toString();
+		
+////		CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+////		HttpGet httpGet = new HttpGet("https://logistics-stage.ecpay.com.tw/Express/Create");
+////		CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
+////		try {
+////
+////		} catch (Exception e) {
+////		}
+		return map.get("CheckMacValue").toString();
 	}
 
 	/**
 	 * 生成廠商編號
-	 *
 	 * @return
 	 */
 	private String getMerchantTradeNumber() {
@@ -93,11 +90,43 @@ public class WelcomeController {
 
 	/**
 	 * 生成交易時間
-	 *
 	 * @return
 	 */
 	private String getMerchantTradeDate() {
 		Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("Asia/Taipei"), Locale.TAIWAN);
 		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(calendar.getTime());
+	}
+	/**
+	 * 生成檢查碼
+	 * @param HashKey
+	 * @param HashIV
+	 * @param map
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException 
+	 */
+	private String getCheckMacValue(String HashKey,String HashIV ,Map<String, String> map) throws IOException, NoSuchAlgorithmException{
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("HashKey=").append(HashKey).append("&");
+		List<String> keys = new ArrayList<>(map.keySet());
+		Collections.sort(keys);
+		Iterator<String> iterator = keys.iterator();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			stringBuilder.append(key).append("=").append(map.get(key)).append("&");
+		}
+		stringBuilder.append("HashIV=").append(HashIV);
+		String urlencide = URLEncoder.encode(stringBuilder.toString()).toLowerCase();
+		urlencide.toLowerCase();
+		urlencide.replaceAll("%21", "!")
+			.replaceAll("%28", "(")
+			.replaceAll("%29", ")")
+			.replaceAll("%2d", "-")
+			.replaceAll("%5f", "_")
+			.replaceAll("%2e", ".")
+			.replaceAll("%2a", "*");
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(urlencide.getBytes());
+		return new BigInteger(1, md.digest()).toString(16).toUpperCase();
 	}
 }
