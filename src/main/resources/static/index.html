@@ -105,47 +105,26 @@
 					<LI class="breadcrumb-item active">分頁名</LI>
 				</OL>
 			</DIV>
-			<FORM action="*">
+			<FORM action="https://logistics-stage.ecpay.com.tw/Express/Create" method="post">
 				<DIV class="form-group">
 					<LABEL for="admin">帳號:</LABEL>
-					<INPUT type="text" class="form-control" id="admin">
+					<INPUT type="text" class="form-control" name="GoodsAmount" value="1000">
+					<INPUT type="text" class="form-control" name="GoodsName" value="測試訂單">
+					<INPUT type="text" class="form-control" name="IsCollection" value="N">
+					<INPUT type="text" class="form-control" name="LogisticsSubType" value="FAMIC2C">
+					<INPUT type="text" class="form-control" name="LogisticsType" value="CVS">
+					<INPUT type="text" class="form-control" name="MerchantID" value="2000933">
+					<INPUT type="text" class="form-control" name="MerchantTradeDate" value="">
+					<INPUT type="text" class="form-control" name="ReceiverCellPhone" value="0909090000">
+					<INPUT type="text" class="form-control" name="ReceiverName" value="收件人">
+					<INPUT type="text" class="form-control" name="ReceiverStoreID" value="001779">
+					<INPUT type="text" class="form-control" name="SenderCellPhone" value="0909000000">
+					<INPUT type="text" class="form-control" name="SenderName" value="寄件人">
+					<INPUT type="text" class="form-control" name="ServerReplyURL" value="https://www.ecpay.com.tw/ServerReplyURL">
+					<INPUT type="text" class="form-control" name="CheckMacValue" value="">
 				</DIV>
-				<DIV class="form-group">
-					<LABEL for="pwd">密碼:</LABEL>
-					<INPUT type="password" class="form-control" id="pwd">
-				</DIV>
-				<DIV class="form-group">
-					<LABEL for="email">Email:</LABEL>
-					<INPUT type="email" class="form-control" id="email">
-				</DIV>
-				<DIV class="form-group form-check">
-					<LABEL class="form-check-label">
-						<INPUT class="form-check-input" type="checkbox">記住我
-					</LABEL>
-				</DIV>
-				<BUTTON type="submit" class="btn btn-primary">確認</BUTTON>
+				<INPUT type="submit" class="btn btn-primary"></INPUT>
 			</FORM>
-			<TABLE class="table margin-top">
-				<THEAD class="thead-dark">
-					<TR>
-						<TH>帳號</TH>
-						<TH>密碼</TH>
-						<TH>Email</TH>
-					</TR>
-				</THEAD>
-				<TBODY>
-					<TR>
-						<TD>admin</TD>
-						<TD>admin</TD>
-						<TD>admin@admin.com</TD>
-					</TR>
-					<TR>
-						<TD>menber</TD>
-						<TD>menber</TD>
-						<TD>menber@menber.com</TD>
-					</TR>
-				</TBODY>
-			</TABLE>
 		</DIV>
 	</BODY>
 </HTML>
