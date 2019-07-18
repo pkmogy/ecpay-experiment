@@ -105,25 +105,34 @@
 					<LI class="breadcrumb-item active">分頁名</LI>
 				</OL>
 			</DIV>
-			<FORM action="https://logistics-stage.ecpay.com.tw/Express/Create" method="post">
+			<FORM action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">
 				<DIV class="form-group">
-					<LABEL for="admin">帳號:</LABEL>
-					<INPUT type="text" class="form-control" name="GoodsAmount" value="1000">
-					<INPUT type="text" class="form-control" name="GoodsName" value="測試訂單">
-					<INPUT type="text" class="form-control" name="IsCollection" value="N">
-					<INPUT type="text" class="form-control" name="LogisticsSubType" value="FAMIC2C">
-					<INPUT type="text" class="form-control" name="LogisticsType" value="CVS">
-					<INPUT type="text" class="form-control" name="MerchantID" value="2000933">
+					<LABEL for="admin">廠商代碼:</LABEL>
+					<INPUT type="text" class="form-control" name="MerchantID" value="2000132">
+					<LABEL for="admin">交易時間:</LABEL>
 					<INPUT type="text" class="form-control" name="MerchantTradeDate" value="">
-					<INPUT type="text" class="form-control" name="ReceiverCellPhone" value="0909090000">
-					<INPUT type="text" class="form-control" name="ReceiverName" value="收件人">
-					<INPUT type="text" class="form-control" name="ReceiverStoreID" value="001779">
-					<INPUT type="text" class="form-control" name="SenderCellPhone" value="0909000000">
-					<INPUT type="text" class="form-control" name="SenderName" value="寄件人">
-					<INPUT type="text" class="form-control" name="ServerReplyURL" value="https://www.ecpay.com.tw/ServerReplyURL">
+					<LABEL for="admin">訂單編號:</LABEL>
+					<INPUT type="text" class="form-control" name="MerchantTradeNo" value="">
+					<LABEL for="admin">交易類型:</LABEL>
+					<INPUT type="text" class="form-control" name="PaymentType" value="aio">
+					<LABEL for="admin">交易金額:</LABEL>
+					<INPUT type="text" class="form-control" name="TotalAmount" value="1000">
+					<LABEL for="admin">交易描述:</LABEL>
+					<INPUT type="text" class="form-control" name="TradeDesc" value="測試">
+					<LABEL for="admin">商品清單:</LABEL>
+					<INPUT type="text" class="form-control" name="ItemName" value="手機X1#相機X1">
+					<LABEL for="admin">回傳網址:</LABEL>
+					<INPUT type="text" class="form-control" name="ReturnURL" value="http://your.web.site/receive.php">
+					<LABEL for="admin">付款方式:</LABEL>
+					<INPUT type="text" class="form-control" name="ChoosePayment" value="Credit">
+					<LABEL for="admin">按鈕連結:</LABEL>
+					<INPUT type="text" class="form-control" name="ClientBackURL" value="http://yahoo.com">
+					<LABEL for="admin">加密類型:</LABEL>
+					<INPUT type="text" class="form-control" name="EncryptType" value="1">
+					<LABEL for="admin">檢查碼:</LABEL>
 					<INPUT type="text" class="form-control" name="CheckMacValue" value="">
 				</DIV>
-				<INPUT type="submit" class="btn btn-primary"></INPUT>
+				<INPUT type="submit" class="btn btn-primary">
 			</FORM>
 		</DIV>
 	</BODY>

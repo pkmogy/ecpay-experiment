@@ -34,9 +34,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/")
 public class WelcomeController {
-
-	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
 	/**
 	 *
 	 * @return @throws IOException
@@ -46,20 +43,18 @@ public class WelcomeController {
 	String index() throws IOException, NoSuchAlgorithmException {
 		JSONObject jsonObject = new JSONObject();
 		Map<String, String> map = new HashMap();
-		map.put("MerchantID", "2000933");//廠商編號
-		map.put("MerchantTradeDate", getMerchantTradeDate());//廠商交易時間
-		map.put("LogisticsType", "CVS");//物流類型
-		map.put("LogisticsSubType", "FAMIC2C");//物流子類型
-		map.put("GoodsAmount", "1000");//商品金額
-		map.put("IsCollection", "N");//是否代收貨款
-		map.put("GoodsName", "測試訂單");//商品名稱
-		map.put("SenderName", "寄件人");//寄件人姓名
-		map.put("SenderCellPhone", "0909000000");//寄件人手機
-		map.put("ReceiverName", "收件人");//收件人姓名
-		map.put("ReceiverCellPhone", "0909090000");//收件人手機
-		map.put("ServerReplyURL", "https://www.ecpay.com.tw/ServerReplyURL");//Server端回覆網址
-		map.put("ReceiverStoreID", "001779");//ReceiverStoreID
-		map.put("CheckMacValue", getCheckMacValue("XBERn1YOvpM9nfZc", "h1ONHk4P4yqbl5LK", map));//檢查碼
+		map.put("MerchantID", "2000132");//廠商編號
+		map.put("MerchantTradeNo", getMerchantTradeNumber());//特店交易編號
+		map.put("MerchantTradeDate",getMerchantTradeDate());//交易時間
+		map.put("PaymentType", "aio");//交易類型
+		map.put("TotalAmount", "1000");//交易金額
+		map.put("TradeDesc", URLEncoder.encode("測試", "UTF-8"));//交易描述
+		map.put("ItemName", "手機X1#相機X1");//商品清單
+		map.put("ReturnURL", "http://your.web.site/receive.php");//付款完成通知回傳網址
+		map.put("ChoosePayment", "Credit");//付款方式
+		map.put("ClientBackURL", "http://yahoo.com");//返回特店的按鈕連結
+		map.put("EncryptType", "1");//CheckMacValue加密類型
+		map.put("CheckMacValue", getCheckMacValue("5294y06JbISpM5x9", "v77hoKGq4kWxNNIS", map,"SHA-256"));//檢查碼 MD5 or SHA-256
 		List<String> keys = new ArrayList<>(map.keySet());
 		Collections.sort(keys);
 		Iterator<String> iterator = keys.iterator();
@@ -81,7 +76,6 @@ public class WelcomeController {
 //		}
 		return jsonObject.toString();
 	}
-
 	/**
 	 * 生成廠商編號
 	 *
@@ -104,15 +98,15 @@ public class WelcomeController {
 
 	/**
 	 * 生成檢查碼
-	 *
 	 * @param HashKey
 	 * @param HashIV
 	 * @param map
+	 * @param Instance
 	 * @return
 	 * @throws IOException
-	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchAlgorithmException 
 	 */
-	private String getCheckMacValue(String HashKey, String HashIV, Map<String, String> map) throws IOException, NoSuchAlgorithmException {
+	private String getCheckMacValue(String HashKey, String HashIV, Map<String, String> map ,String Instance) throws IOException, NoSuchAlgorithmException {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("HashKey=").append(HashKey).append("&");
 		List<String> keys = new ArrayList<>(map.keySet());
@@ -124,22 +118,19 @@ public class WelcomeController {
 			//System.out.println(key + "=" + map.get(key));
 		}
 		stringBuilder.append("HashIV=").append(HashIV);
-		String step1 = stringBuilder.toString();
-		System.out.println("step1 = " + step1);
-
-		String urlEncoded = URLEncoder.encode(step1, "UTF-8").toLowerCase();
+		String urlEncoded = URLEncoder.encode(stringBuilder.toString(), "UTF-8").toLowerCase();
 		String netUrlEncode = urlEncoded.replaceAll("%21", "\\!").replaceAll("%28", "\\(").replaceAll("%29", "\\)");
-		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-		byte[] bytes = messageDigest.digest(netUrlEncode.getBytes());
-		char[] hexChars = new char[bytes.length * 2];
-		for (int j = 0; j < bytes.length; j++) {
-			int v = bytes[j] & 0xFF;
-			hexChars[j * 2] = hexArray[v >>> 4];
-			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-		}
-//		messageDigest.update(urlencide.getBytes());
-//		return new BigInteger(1, messageDigest.digest()).toString(16).toUpperCase();
-		System.out.println(hexChars);
-		return new String(hexChars);
+		MessageDigest messageDigest = MessageDigest.getInstance(Instance);
+//		byte[] bytes = messageDigest.digest(netUrlEncode.getBytes());
+//		char[] hexChars = new char[bytes.length * 2];
+//		for (int j = 0; j < bytes.length; j++) {
+//			int v = bytes[j] & 0xFF;
+//			hexChars[j * 2] = hexArray[v >>> 4];
+//			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+//		}
+		messageDigest.update(netUrlEncode.getBytes());
+		return new BigInteger(1, messageDigest.digest()).toString(16).toUpperCase();
+//		System.out.println(hexChars);
+//		return new String(hexChars);
 	}
 }
