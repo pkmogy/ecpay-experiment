@@ -16,6 +16,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -27,6 +37,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * @author user
@@ -34,33 +47,70 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/")
 public class WelcomeController {
+
 	/**
+	 * 金流訂單生成-信用卡
 	 *
-	 * @return @throws IOException
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
 	 */
 	@GetMapping(path = "/", produces = "text/plain;charset=UTF-8")
 	@ResponseBody
-	String index() throws IOException, NoSuchAlgorithmException {
-		JSONObject jsonObject = new JSONObject();
+	ModelAndView index(HttpServletRequest request) throws IOException, NoSuchAlgorithmException, ParserConfigurationException {
+		Document document;
+		document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		//JSONObject jsonObject = new JSONObject();
 		Map<String, String> map = new HashMap();
 		map.put("MerchantID", "2000132");//廠商編號
-		map.put("MerchantTradeNo", getMerchantTradeNumber());//特店交易編號
-		map.put("MerchantTradeDate",getMerchantTradeDate());//交易時間
+		map.put("MerchantTradeNo", getMerchantTradeNumber());//交易編號
+		map.put("MerchantTradeDate", getMerchantTradeDate());//交易時間
 		map.put("PaymentType", "aio");//交易類型
 		map.put("TotalAmount", "1000");//交易金額
-		map.put("TradeDesc", URLEncoder.encode("測試", "UTF-8"));//交易描述
-		map.put("ItemName", "手機X1#相機X1");//商品清單
-		map.put("ReturnURL", "http://your.web.site/receive.php");//付款完成通知回傳網址
+		map.put("TradeDesc", URLEncoder.encode("test", "UTF-8"));//交易描述
+		map.put("ItemName", "item1 x 2#item2 x 1");//商品名稱
+		map.put("ReturnURL", "http://127.0.0.1/index.html");//付款完成通知回傳網址
 		map.put("ChoosePayment", "Credit");//付款方式
-		map.put("ClientBackURL", "http://yahoo.com");//返回特店的按鈕連結
-		map.put("EncryptType", "1");//CheckMacValue加密類型
-		map.put("CheckMacValue", getCheckMacValue("5294y06JbISpM5x9", "v77hoKGq4kWxNNIS", map,"SHA-256"));//檢查碼 MD5 or SHA-256
+		map.put("ClientBackURL", "http://127.0.0.1/index.html");//Client 端返回特店的按鈕連結
+		map.put("EncryptType", "1");//CheckMacValue 加密類型
+		map.put("CreditInstallment", "3,6,12,18,24");//刷卡分期期數
+//		map.put("InvoiceMark", "Y");//電子發票開立
+//		map.put("RelateNumber", "A" + getMerchantTradeNumber());//自訂編號
+//		map.put("CustomerPhone", "0912345678");//物流子類型
+//		map.put("CustomerEmail", URLEncoder.encode("abc@ecpay.com.tw", "UTF-8"));//物流子類型
+//		map.put("Print", "0");//列印註記
+//		map.put("Donation", "0");//捐贈註記
+//		map.put("CarruerType", "1");//載具類別
+//		map.put("CarruerNum", "");//載具編號
+//		map.put("TaxType", "1");//課稅類別
+//		map.put("InvoiceItemCount", "1");//商品數量
+//		map.put("InvoiceItemPrice", "1000");//商品價格
+//		map.put("DelayDay", "0");//延遲天數
+//		map.put("InvType", "07");//商品合計
+//		map.put("InvoiceItemName", URLEncoder.encode("test", "UTF-8"));//商品名稱
+//		map.put("InvoiceItemWord", URLEncoder.encode("test", "UTF-8"));//商品單位
+		map.put("CheckMacValue", getCheckMacValue("5294y06JbISpM5x9", "v77hoKGq4kWxNNIS", map, "SHA-256"));//檢查碼 MD5 or SHA-256
+
 		List<String> keys = new ArrayList<>(map.keySet());
 		Collections.sort(keys);
 		Iterator<String> iterator = keys.iterator();
+		
+		Element parametersElement = document.createElement("parameters");
+		document.appendChild(parametersElement);
+		Element actionElement = document.createElement("action");
+		parametersElement.appendChild(actionElement);
+		actionElement.setTextContent("https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5");
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			jsonObject.put(key, map.get(key));
+			Element trElement = document.createElement("tr");
+			parametersElement.appendChild(trElement);
+			Element keyElement = document.createElement("key");
+			trElement.appendChild(keyElement);
+			Element valueElement = document.createElement("value");
+			trElement.appendChild(valueElement);
+			keyElement.setTextContent(key);
+			valueElement.setTextContent(map.get(key));
+			//jsonObject.put(key, map.get(key));
 			//System.out.println(key + "=" + map.get(key));
 		}
 //		CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
@@ -74,8 +124,218 @@ public class WelcomeController {
 //
 //		} catch (Exception e) {
 //		}
-		return jsonObject.toString();
+		ModelAndView modelAndView = new ModelAndView("XSLTView");
+		modelAndView.getModelMap().addAttribute(new DOMSource(document));
+
+		return modelAndView;
 	}
+	/**
+	 * 金流訂單查詢
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws ParserConfigurationException 
+	 */
+	@GetMapping(path = "/info", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	ModelAndView info(HttpServletRequest request) throws IOException, NoSuchAlgorithmException, ParserConfigurationException {
+		Document document;
+		document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		//JSONObject jsonObject = new JSONObject();
+		Map<String, String> map = new HashMap();
+		map.put("MerchantID", "2000132");//廠商編號
+		map.put("MerchantTradeNo", "2019062405403854");//交易編號
+		map.put("TimeStamp",  getMerchantTradeNumber());//時間戳記
+		map.put("CheckMacValue", getCheckMacValue("5294y06JbISpM5x9", "v77hoKGq4kWxNNIS", map, "SHA-256"));//檢查碼 MD5 or SHA-256
+
+		List<String> keys = new ArrayList<>(map.keySet());
+		Collections.sort(keys);
+		Iterator<String> iterator = keys.iterator();
+		
+		Element parametersElement = document.createElement("parameters");
+		document.appendChild(parametersElement);
+		Element actionElement = document.createElement("action");
+		parametersElement.appendChild(actionElement);
+		actionElement.setTextContent("https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5");
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			Element trElement = document.createElement("tr");
+			parametersElement.appendChild(trElement);
+			Element keyElement = document.createElement("key");
+			trElement.appendChild(keyElement);
+			Element valueElement = document.createElement("value");
+			trElement.appendChild(valueElement);
+			keyElement.setTextContent(key);
+			valueElement.setTextContent(map.get(key));
+		}
+		ModelAndView modelAndView = new ModelAndView("XSLTView");
+		modelAndView.getModelMap().addAttribute(new DOMSource(document));
+
+		return modelAndView;
+	}
+
+	/**
+	 * 物流訂單生成
+	 *
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 */
+	@GetMapping(path = "/index2", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public ModelAndView index2(HttpServletResponse response) throws IOException, NoSuchAlgorithmException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
+		Document document;
+		document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		//JSONObject jsonObject = new JSONObject();
+		Map<String, String> map = new HashMap();
+		map.put("MerchantID", "2000933");//廠商編號
+		map.put("MerchantTradeDate", getMerchantTradeDate());//廠商交易時間
+		map.put("LogisticsType", "CVS");//物流類型
+		map.put("LogisticsSubType", "FAMIC2C");//物流子類型
+		map.put("GoodsAmount", "1000");//商品金額
+		map.put("IsCollection", "N");//是否代收貨款
+		map.put("GoodsName", "測試訂單");//商品名稱
+		map.put("SenderName", "寄件人");//寄件人姓名
+		map.put("SenderCellPhone", "0909000000");//寄件人手機
+		map.put("ReceiverName", "收件人");//收件人姓名
+		map.put("ReceiverCellPhone", "0909090000");//收件人手機
+		map.put("ServerReplyURL", "https://www.ecpay.com.tw/ServerReplyURL");//Server端回覆網址
+		map.put("ReceiverStoreID", "001779");//收件人門市代號
+		map.put("CheckMacValue", getCheckMacValue("XBERn1YOvpM9nfZc", "h1ONHk4P4yqbl5LK", map, "MD5"));//檢查碼 MD5 or SHA-256
+		List<String> keys = new ArrayList<>(map.keySet());
+		Collections.sort(keys);
+		Iterator<String> iterator = keys.iterator();
+
+		Element parametersElement = document.createElement("parameters");
+		document.appendChild(parametersElement);
+		Element actionElement = document.createElement("action");
+		parametersElement.appendChild(actionElement);
+		actionElement.setTextContent("https://logistics-stage.ecpay.com.tw/Express/Create");
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			//jsonObject.put(key, map.get(key));
+			Element trElement = document.createElement("tr");
+			parametersElement.appendChild(trElement);
+			Element keyElement = document.createElement("key");
+			trElement.appendChild(keyElement);
+			Element valueElement = document.createElement("value");
+			trElement.appendChild(valueElement);
+			keyElement.setTextContent(key);
+			valueElement.setTextContent(map.get(key));
+		}
+
+//		try {
+//			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(document), new StreamResult(response.getOutputStream()));
+//		} catch (TransformerFactoryConfigurationError transformerFactoryConfigurationError) {
+////			LOGGER.info(transformerFactoryConfigurationError.getLocalizedMessage());
+//		} catch (TransformerException transformerException) {
+//		} catch (IOException ioException) {
+//		}
+		ModelAndView modelAndView = new ModelAndView("XSLTView");
+		modelAndView.getModelMap().addAttribute(new DOMSource(document));
+
+		return modelAndView;
+	}
+	
+	@GetMapping(path = "index2/info", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	ModelAndView logisticsInfo(HttpServletRequest request) throws IOException, NoSuchAlgorithmException, ParserConfigurationException {
+		Document document;
+		document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		//JSONObject jsonObject = new JSONObject();
+		Map<String, String> map = new HashMap();
+		map.put("MerchantID", "2000933");//廠商編號
+		map.put("AllPayLogisticsID", "196196");//綠界編號
+		map.put("TimeStamp",  getMerchantTradeNumber());//時間戳記
+		map.put("CheckMacValue", getCheckMacValue("XBERn1YOvpM9nfZc", "h1ONHk4P4yqbl5LK", map, "MD5"));//檢查碼 MD5 or SHA-256
+
+		List<String> keys = new ArrayList<>(map.keySet());
+		Collections.sort(keys);
+		Iterator<String> iterator = keys.iterator();
+		
+		Element parametersElement = document.createElement("parameters");
+		document.appendChild(parametersElement);
+		Element actionElement = document.createElement("action");
+		parametersElement.appendChild(actionElement);
+		actionElement.setTextContent("https://logistics-stage.ecpay.com.tw/Helper/QueryLogisticsTradeInfo/V2");
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			Element trElement = document.createElement("tr");
+			parametersElement.appendChild(trElement);
+			Element keyElement = document.createElement("key");
+			trElement.appendChild(keyElement);
+			Element valueElement = document.createElement("value");
+			trElement.appendChild(valueElement);
+			keyElement.setTextContent(key);
+			valueElement.setTextContent(map.get(key));
+		}
+		ModelAndView modelAndView = new ModelAndView("XSLTView");
+		modelAndView.getModelMap().addAttribute(new DOMSource(document));
+
+		return modelAndView;
+	}
+	
+
+	/**
+	 * 電子發票生成
+	 *
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 */
+	@GetMapping(path = "/index3", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	ModelAndView index3() throws IOException, NoSuchAlgorithmException, ParserConfigurationException {
+		Document document;
+		document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Map<String, String> map = new HashMap();
+		map.put("TimeStamp",  getMerchantTradeNumber());//時間戳記
+		map.put("MerchantID", "2000132");//廠商編號
+		map.put("RelateNumber", "A" + getMerchantTradeNumber());//自訂編號
+		map.put("CustomerPhone", "0912345678");//物流子類型
+		map.put("Print", "0");//列印註記
+		map.put("Donation", "0");//捐贈註記
+		map.put("CarruerType", "1");//載具類別
+		map.put("CarruerNum", "");//載具編號
+		map.put("TaxType", "1");//課稅類別
+		map.put("SalesAmount", "1000");//發票總金額(含稅)
+		map.put("ItemCount", "1");//商品數量
+		map.put("ItemPrice", "1000");//商品價格
+		map.put("ItemAmount", "1000");//商品合計
+		map.put("InvType", "07");//商品合計
+		map.put("vat", "1");//商品合計
+		map.put("CheckMacValue", getCheckMacValue("ejCk326UnaZWKisg", "q9jcZX8Ib9LM8wYk", map, "MD5"));//檢查碼 MD5 or SHA-256
+		map.put("ItemName", URLEncoder.encode("測試", "UTF-8"));//商品名稱
+		map.put("ItemWord", URLEncoder.encode("test", "UTF-8"));//商品單位
+
+		List<String> keys = new ArrayList<>(map.keySet());
+		Collections.sort(keys);
+		Iterator<String> iterator = keys.iterator();
+		
+		Element parametersElement = document.createElement("parameters");
+		document.appendChild(parametersElement);
+		Element actionElement = document.createElement("action");
+		parametersElement.appendChild(actionElement);
+		actionElement.setTextContent("https://einvoice-stage.ecpay.com.tw/Invoice/Issue");
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			//jsonObject.put(key, map.get(key));
+			Element trElement = document.createElement("tr");
+			parametersElement.appendChild(trElement);
+			Element keyElement = document.createElement("key");
+			trElement.appendChild(keyElement);
+			Element valueElement = document.createElement("value");
+			trElement.appendChild(valueElement);
+			keyElement.setTextContent(key);
+			valueElement.setTextContent(map.get(key));
+		}
+		
+		ModelAndView modelAndView = new ModelAndView("XSLTView");
+		modelAndView.getModelMap().addAttribute(new DOMSource(document));
+		return modelAndView;
+	}
+
 	/**
 	 * 生成廠商編號
 	 *
@@ -83,7 +343,7 @@ public class WelcomeController {
 	 */
 	private String getMerchantTradeNumber() {
 		Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("Asia/Taipei"), Locale.TAIWAN);
-		return Long.toString(calendar.getTimeInMillis());
+		return Long.toString(calendar.getTimeInMillis()/1000);
 	}
 
 	/**
@@ -98,15 +358,16 @@ public class WelcomeController {
 
 	/**
 	 * 生成檢查碼
+	 *
 	 * @param HashKey
 	 * @param HashIV
 	 * @param map
 	 * @param Instance
 	 * @return
 	 * @throws IOException
-	 * @throws NoSuchAlgorithmException 
+	 * @throws NoSuchAlgorithmException
 	 */
-	private String getCheckMacValue(String HashKey, String HashIV, Map<String, String> map ,String Instance) throws IOException, NoSuchAlgorithmException {
+	private String getCheckMacValue(String HashKey, String HashIV, Map<String, String> map, String Instance) throws IOException, NoSuchAlgorithmException {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("HashKey=").append(HashKey).append("&");
 		List<String> keys = new ArrayList<>(map.keySet());

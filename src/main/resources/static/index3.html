@@ -105,41 +105,16 @@
 					<LI class="breadcrumb-item active">分頁名</LI>
 				</OL>
 			</DIV>
-			
-			<FORM action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">
+			<FORM action="https://einvoice-stage.ecpay.com.tw/Invoice/Issue" method="post">
 				<DIV class="form-group">
-					<LABEL for="admin">廠商代碼:</LABEL>
+					<LABEL for="admin">時間戳記</LABEL>
+					<INPUT type="text" class="form-control" name="TimeStamp" value="">
+					<LABEL for="admin">廠商編號:</LABEL>
 					<INPUT type="text" class="form-control" name="MerchantID" value="2000132">
-					<LABEL for="admin">交易編號:</LABEL>
-					<INPUT type="text" class="form-control" name="MerchantTradeNo" value="">
-					<LABEL for="admin">交易時間:</LABEL>
-					<INPUT type="text" class="form-control" name="MerchantTradeDate" value="">
-					<LABEL for="admin">交易類型</LABEL>
-					<INPUT type="text" class="form-control" name="PaymentType" value="aio">
-					<LABEL for="admin">交易金額</LABEL>
-					<INPUT type="text" class="form-control" name="TotalAmount" value="1000">
-					<LABEL for="admin">交易描述</LABEL>
-					<INPUT type="text" class="form-control" name="TradeDesc" value="test">
-					<LABEL for="admin">商品名稱</LABEL>
-					<INPUT type="text" class="form-control" name="ItemName" value="item1 x 2#item2 x 1">
-					<LABEL for="admin">付款完成通知回傳網址</LABEL>
-					<INPUT type="text" class="form-control" name="ReturnURL" value="http://127.0.0.1/index.html">
-					<LABEL for="admin">付款方式</LABEL>
-					<INPUT type="text" class="form-control" name="ChoosePayment" value="Credit">
-					<LABEL for="admin">Client 端返回特店的按鈕連結</LABEL>
-					<INPUT type="text" class="form-control" name="ClientBackURL" value="http://127.0.0.1/index.html">
-					<LABEL for="admin">CheckMacValue 加密類型:</LABEL>
-					<INPUT type="text" class="form-control" name="EncryptType" value="1">
-					<LABEL for="admin">刷卡分期期數:</LABEL>
-					<INPUT type="text" class="form-control" name="CreditInstallment" value="3,6,12,18,24">
-					<LABEL for="admin">電子發票開立</LABEL>
-					<INPUT type="text" class="form-control" name="InvoiceMark" value="Y">
 					<LABEL for="admin">自訂編號</LABEL>
 					<INPUT type="text" class="form-control" name="RelateNumber" value="">
 					<LABEL for="admin">客戶手機</LABEL>
 					<INPUT type="text" class="form-control" name="CustomerPhone" value="0912345678">
-					<LABEL for="admin">客戶電子信箱</LABEL>
-					<INPUT type="text" class="form-control" name="CustomerEmail" value="abc%40ecpay.com.tw">
 					<LABEL for="admin">列印註記</LABEL>
 					<INPUT type="text" class="form-control" name="Print" value="0">
 					<LABEL for="admin">捐贈註記</LABEL>
@@ -150,20 +125,24 @@
 					<INPUT type="text" class="form-control" name="CarruerNum" value="">
 					<LABEL for="admin">課稅類別</LABEL>
 					<INPUT type="text" class="form-control" name="TaxType" value="1">
+					<LABEL for="admin">發票總金額(含稅)</LABEL>
+					<INPUT type="text" class="form-control" name="SalesAmount" value="1000">
 					<LABEL for="admin">商品數量</LABEL>
-					<INPUT type="text" class="form-control" name="InvoiceItemCount" value="1">
+					<INPUT type="text" class="form-control" name="ItemCount" value="1">
 					<LABEL for="admin">商品價格</LABEL>
-					<INPUT type="text" class="form-control" name="InvoiceItemPrice" value="1000">
-					<LABEL for="admin">延遲天數</LABEL>
-					<INPUT type="text" class="form-control" name="DelayDay" value="0">
+					<INPUT type="text" class="form-control" name="ItemPrice" value="1000">
+					<LABEL for="admin">商品合計</LABEL>
+					<INPUT type="text" class="form-control" name="ItemAmount" value="1000">
 					<LABEL for="admin">字軌類別</LABEL>
 					<INPUT type="text" class="form-control" name="InvType" value="07">
-					<LABEL for="admin">商品名稱</LABEL>
-					<INPUT type="text" class="form-control" name="InvoiceItemName" value="">
-					<LABEL for="admin">商品單位</LABEL>
-					<INPUT type="text" class="form-control" name="InvoiceItemWord" value="">
-					<LABEL for="admin">檢查碼:</LABEL>
+					<LABEL for="admin">商品單價是否含稅</LABEL>
+					<INPUT type="text" class="form-control" name="vat" value="1">
+					<LABEL for="admin">檢查碼</LABEL>
 					<INPUT type="text" class="form-control" name="CheckMacValue" value="">
+					<LABEL for="admin">商品名稱</LABEL>
+					<INPUT type="text" class="form-control" name="ItemName" value="">
+					<LABEL for="admin">商品單位</LABEL>
+					<INPUT type="text" class="form-control" name="ItemWord" value="">
 				</DIV>
 				<INPUT type="submit" class="btn btn-primary">
 			</FORM>
