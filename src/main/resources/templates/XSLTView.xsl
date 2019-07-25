@@ -20,7 +20,7 @@
 				<TITLE>index.html</TITLE>
 				<STYLE>
 					.margin-navbar {
-					margin-top:72px !important;
+					margin-top:30px !important;
 					}
 			
 					.margin-top {
@@ -34,7 +34,6 @@
 				</STYLE>
 			</HEAD>
 			<BODY class="margin-left-right">
-
 				<DIV class="margin-navbar">
 					<FORM action="{parameters/action}" method="post">
 						<DIV class="form-group">
