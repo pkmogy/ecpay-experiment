@@ -35,6 +35,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -443,6 +444,73 @@ public class WelcomeController {
 		ModelAndView modelAndView = new ModelAndView("XSLTView");
 		modelAndView.getModelMap().addAttribute(new DOMSource(document));
 		return modelAndView;
+	}
+	
+	/**
+	 * 電子地圖
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws ParserConfigurationException 
+	 */
+	@GetMapping(path = "/index2/map", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	ModelAndView map() throws IOException, NoSuchAlgorithmException, ParserConfigurationException {
+		Document document;
+		document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Map<String, String> map = new HashMap();
+		map.put("MerchantID", "2000132");//廠商編號
+		map.put("MerchantTradeNo", "A" + getMerchantTradeNumber());//廠商交易編號
+		map.put("LogisticsType", "CVS");//物流類型
+		map.put("LogisticsSubType", "UNIMART");//物流子類型
+		map.put("IsCollection", "N");//是否代收款
+		map.put("ServerReplyURL", "http://127.0.0.1/index2/map/return");//Server端回傳網址
+		map.put("ExtraData", "測試資料");//額外資訊
+		map.put("Device", "0");//使用設備
+		
+		List<String> keys = new ArrayList<>(map.keySet());
+		Collections.sort(keys);
+		Iterator<String> iterator = keys.iterator();
+		
+		Element parametersElement = document.createElement("parameters");
+		document.appendChild(parametersElement);
+		Element actionElement = document.createElement("action");
+		parametersElement.appendChild(actionElement);
+		actionElement.setTextContent("https://logistics-stage.ecpay.com.tw/Express/map");
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			//jsonObject.put(key, map.get(key));
+			Element trElement = document.createElement("tr");
+			parametersElement.appendChild(trElement);
+			Element keyElement = document.createElement("key");
+			trElement.appendChild(keyElement);
+			Element valueElement = document.createElement("value");
+			trElement.appendChild(valueElement);
+			keyElement.setTextContent(key);
+			valueElement.setTextContent(map.get(key));
+		}
+		
+		ModelAndView modelAndView = new ModelAndView("XSLTView");
+		modelAndView.getModelMap().addAttribute(new DOMSource(document));
+		return modelAndView;
+	}
+	
+	/**
+	 * 地圖資訊回傳
+	 * @param request
+	 * @return 
+	 */
+	@PostMapping (path = "/index2/map/return", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	String map(HttpServletRequest request){
+		StringBuilder stringBuilder = new StringBuilder();
+		List<String> keys = new ArrayList<String>(request.getParameterMap().keySet());
+		Iterator<String> iterator=keys.iterator();
+		while(iterator.hasNext()){
+			String key = iterator.next();
+			stringBuilder.append(key).append("=").append(request.getParameter(key)).append("\n");
+		}
+		return stringBuilder.toString();
 	}
 
 	/**
