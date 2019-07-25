@@ -39,6 +39,7 @@
 					<FORM action="{parameters/action}" method="post">
 						<DIV class="form-group">
 							<xsl:for-each select="parameters/tr">
+								<LABEL for=""><xsl:value-of select="key"/>:</LABEL>
 								<INPUT type="text" class="form-control" name="{key}" value="{value}" />
 							</xsl:for-each>
 						</DIV>
