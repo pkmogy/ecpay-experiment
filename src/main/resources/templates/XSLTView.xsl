@@ -20,7 +20,7 @@
 				<TITLE>index.html</TITLE>
 				<STYLE>
 					.margin-navbar {
-					margin-top:30px !important;
+					margin-top:72px !important;
 					}
 			
 					.margin-top {
@@ -33,6 +33,40 @@
 					}
 				</STYLE>
 			</HEAD>
+			<NAV class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+				<DIV class="container-fluid">
+					<DIV class="navbar-header">
+						<A class="navbar-brand" href="index.html">金流測試</A>
+					</DIV>
+					<DIV class="collapse navbar-collapse">
+						<UL class="nav navbar-nav mr-auto">
+							<LI class="nav-item dropdown">
+								<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">金流</A>
+								<DIV class="dropdown-menu">
+									<A  class="dropdown-item" href="http://127.0.0.1">金流訂單生成</A >
+									<A  class="dropdown-item" href="http://127.0.0.1/info">金流訂單查詢</A >
+								</DIV>
+							</LI>
+							<LI class="nav-item dropdown">
+								<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">電子發票</A>
+								<DIV class="dropdown-menu">
+									<A  class="dropdown-item" href="http://127.0.0.1/index3">電子發票生成</A >
+									<A  class="dropdown-item" href="http://127.0.0.1/index3/Issue">電子發票查詢</A >
+								</DIV>
+							</LI>
+							<LI class="nav-item dropdown">
+								<A class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">物流</A>
+								<DIV class="dropdown-menu">
+									<A  class="dropdown-item" href="http://127.0.0.1/index2">物流訂單生成</A >
+									<A  class="dropdown-item" href="http://127.0.0.1/index2/info">物流訂單查詢</A >
+									<A  class="dropdown-item" href="http://127.0.0.1/index2/print">產生托運單/一段標</A >
+									<A  class="dropdown-item" href="http://127.0.0.1/index2/map">電子地圖</A >
+								</DIV>
+							</LI>
+						</UL>
+					</DIV>
+				</DIV>
+			</NAV>
 			<BODY class="margin-left-right">
 				<DIV class="margin-navbar">
 					<FORM action="{parameters/action}" method="post">
