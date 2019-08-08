@@ -219,10 +219,14 @@ public class WelcomeController {
 
 	/**
 	 * 物流訂單生成
-	 *
+	 * 
+	 * @param response
 	 * @return
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
+	 * @throws ParserConfigurationException
+	 * @throws TransformerConfigurationException
+	 * @throws TransformerException 
 	 */
 	@GetMapping(path = "/index2", produces = "text/html;charset=UTF-8")
 	@ResponseBody
